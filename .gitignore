@@ -1,0 +1,15 @@
+##Python Completion Files
+*.pyc
+__pycache_
+**/__pycache__
+**/*.pyc
+**/*.tool-versions
+*.tool-versions
+
+##Others
+*.DS_Store
+**/*.DS_Store
+*.bhc
+**/*.bhc
+*.bin
+**/*.bin
