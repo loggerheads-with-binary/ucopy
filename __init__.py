@@ -22,7 +22,7 @@ def arguments(args : list = None ):
     P2.add_argument('-g' , '--gitbash' , dest = 'type_' , action = 'store_const' , const = 'gitbash' , default = 'regular' ,
                     help = 'Convert windows path into gitbash path')
 
-    P2.add_argument('-R' , '--rc-trans' , '--reverse-chaeyoung' , dest = 'type_' , default = 'regular' , action = 'store_const' , const = 'R_CHAE' ,
+    P2.add_argument('--chae' , '--chaeyoung' ,'--rc-trans' , '--reverse-chaeyoung' , dest = 'type_' , default = 'regular' , action = 'store_const' , const = 'R_CHAE' ,
                     help = 'Get reverse chaeyoung translated path')
 
     P2.add_argument('-w' , '--wsl' , dest = 'type_' , action = 'store_const' , default = 'regular' , const = 'wsl' , help = "Get WSL equivalent(Windows only)" )
@@ -45,7 +45,7 @@ def arguments(args : list = None ):
                     help = 'Get the absolute path. (DEFAULT)')
 
 
-    P3.add_argument('-r' , '--realpath' , '--real-path' , dest = 'driver' , action = 'store_const' , const ='REAL' , default = 'ABS' ,
+    P3.add_argument('-R' , '--realpath' , '--real-path' , dest = 'driver' , action = 'store_const' , const ='REAL' , default = 'ABS' ,
                     help = "Get realpath(traverse symlinks)")
 
 
@@ -56,7 +56,12 @@ def arguments(args : list = None ):
     final_parser.add_argument('--no-copy' , action = 'store_false' , dest =  'copy_flag', help = "Does not copy final path to clipboard")
     final_parser.add_argument('--no-print' , action = 'store_false' , dest = 'print_flag' , help = "Does not print final path to stdout")
 
-    final_parser.add_argument('-u' , '--url' , dest = 'url_flag' , action = 'store_true' , help = "Final path is made into URL instead of regular system path")
+    final_delivers = final_parser.add_mutually_exclusive_group()
+
+    final_delivers.add_argument('-r' , '--repr' , '-j' , '--json' , '--jsonify' , dest = 'repr_flag' , action = 'store_true' ,
+                                help = "Makes the final path into it's useful representation(C/Json-like string)")
+
+    final_delivers.add_argument('-u' , '--url' , dest = 'url_flag' , action = 'store_true' , help = "Final path is made into URL instead of regular system path")
     final_parser.add_argument('-/' , '--/' , '--unix-slash' , dest = 'unix_slash' , action = 'store_true' ,
                         help = 'If switched, outputs all windows \\ as unix /')
 
@@ -177,6 +182,11 @@ def DriverMain(opts):
 
 
         fpath = url_make(fpath)
+
+    elif opts.repr_flag :
+
+        import json
+        fpath = json.dumps(fpath).replace("\'" , "\\\'")
 
     if opts.copy_flag:
 
